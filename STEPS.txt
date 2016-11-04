@@ -1,0 +1,2 @@
+1. trier le tableau par pays, type de gas, secteur code, année par excel -> data_sorted.csv   
+
