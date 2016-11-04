@@ -14,3 +14,7 @@ data <- read.csv("D:/data-warehouse/UNFCCC_V19.csv", sep="\t")
 #### Deleting coloumns we are not interested in  : Unit and Format_name ####
 data <- data[,- c(4,10)]
 colnames(data)
+
+#### Deleting sector_code from sector_name ####
+data$Sector_name2 <- sapply()
+test2 <- strsplit(test, split="-")
