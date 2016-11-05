@@ -1,2 +1,3 @@
-1. trier le tableau par pays, type de gas, secteur code, année par excel -> data_sorted.csv   
-
+1. Supprimer Format_name, Unit par excel
+2. trier le tableau par pays, type de gas, secteur code, année par excel -> data_sorted.csv   
+3. 
