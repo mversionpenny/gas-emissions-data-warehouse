@@ -79,7 +79,19 @@ levels(data$Parent_sector_code)[levels(data$Parent_sector_code)=="1.D.1"] <- "8"
 levels(data$Sector_code)[levels(data$Sector_code)=="1.D.2"] <- "9"
 levels(data$Sector_code)[levels(data$Sector_code)=="1.D.3"] <- "10"
 
-#### Recompute the sum sector 4 and 1 ####
+#### Add sector 5.F ####
+for(i in which(data$Sector_code == "5.F.1")){
+  temp <- subset(data, Country == data$Country[i] & Pollutant_name == data$Pollutant_name[i] & Year == data$Year[i] & Parent_sector_code == "5.F")
+  new_row <- data[i,]
+  new_row$Parent_sector_code <- "5"
+  new_row$Sector_code <- "5.F"
+  new_row$Sector_name <- "Long-term C Storage"
+  new_row$emissions <- sum(temp$emissions)
+  data <- rbind(data, new_row)
+}
+
+
+#### Recompute the sum sector 4, 5 and 1 ####
 for(i in which(data$Sector_code == "4.F")){
   temp <- subset(data, Country == data$Country[i] & Pollutant_name == data$Pollutant_name[i] & Year == data$Year[i] & Parent_sector_code == "4.F")
   data$emissions[i] <- sum(temp$emissions)  
@@ -92,6 +104,8 @@ for(i in which(data$Sector_code == "1")){
   temp <- subset(data, Country == data$Country[i] & Pollutant_name == data$Pollutant_name[i] & Year == data$Year[i] & Parent_sector_code == "1")
   data$emissions[i] <- sum(temp$emissions)  
 }
+
+
 
 #### Save cleaned data ####
 write.table(data, "clean_data.csv", row.names = F, append = F, sep = ";") 
