@@ -6,9 +6,9 @@ library(RMySQL)
 
 
 #Margot
-setwd("D:/data-warehouse/")
+#setwd("D:/data-warehouse/")
 #Thu
-#setwd("C:/Users/Hoai Thu Nguyen/Dropbox/DM/BD/Projet")
+setwd("C:/Users/Hoai Thu Nguyen/Dropbox/DM/BD/Projet")
 
 ####
 data <- fread("clean_data.csv", sep=";", stringsAsFactors=T)
@@ -46,14 +46,10 @@ for(i in 1:length(codes)){
   parents[i] <- levelsParents[temp$Parent_sector_code[1]]
   
 }
-
-
 for(j in 1:length(codes)){
   sql <- sprintf( "insert into `h_sector` (`id_sector`, `name`) values ('%s', '%s');", codes[j], names[j])
   rs <- dbSendQuery(con, sql)
 }
-
-
 for(j in 1:length(codes)){
   if(parents[j] != ""){
     sql <- sprintf( "update `gas-emissions`.`h_sector` SET `id_parent`='%s' where `id_sector`='%s';",parents[j], codes[j])
@@ -61,9 +57,31 @@ for(j in 1:length(codes)){
   }
 }
 
-# Insert sectors
-for(k in 1:nrow(data)){
-  sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", data$emissions[k], data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
-  rs <- dbSendQuery(con, sql)
+# Insert relation between 2 sector
+sectors <- levels(data$Sector_code)
+relation_sectors <- data.frame(id_sector1=character(), id_sector2=character(), distance = integer(), stringsAsFactors=F)
+line = 1
+for (i in 1:length(sectors)){
+  s1 = sectors[i]
+  print(s1)
+  split_s1 <- unlist(strsplit(s1, "[.]"))
+  for (j in i:length(sectors)){
+    s2 = sectors[j]
+    split_s2 <- unlist(strsplit(s2, "[.]"))
+    if (length(split_s1) <= length(split_s2)){
+      same_branch = T
+      for (k in 1: length(split_s1)){
+        same_branch = same_branch & (split_s1[k] == split_s2[k])
+      }
+      if (same_branch){
+        relation_sectors[line,] <- c(s1, s2, length(split_s2) - length(split_s1))
+        line = line + 1
+      }
+    }
+  }
 }
 
+for(i in 1:nrow(relation_sectors)){
+    sql <- sprintf( "insert into `h_sector` (`id_sector1`, `id_sector2`, `distance`) values ('%s', '%s', '%s');", relation_sectors$id_sector1[i], relation_sectors$id_sector2[i], relation_sectors$distance[i])
+    rs <- dbSendQuery(con, sql)
+}
