@@ -6,9 +6,9 @@ library(RMySQL)
 
 
 #Margot
-#setwd("D:/data-warehouse/")
+setwd("D:/data-warehouse/")
 #Thu
-setwd("C:/Users/Hoai Thu Nguyen/Dropbox/DM/BD/Projet")
+#setwd("C:/Users/Hoai Thu Nguyen/Dropbox/DM/BD/Projet")
 
 ####
 data <- fread("clean_data.csv", sep=";", stringsAsFactors=T)
@@ -52,7 +52,7 @@ for(j in 1:length(codes)){
 }
 for(j in 1:length(codes)){
   if(parents[j] != ""){
-    sql <- sprintf( "update `gas-emissions`.`h_sector` SET `id_parent`='%s' where `id_sector`='%s';",parents[j], codes[j])
+    sql <- sprintf( "update `gas-emissions`.`h_sector` SET `id_ancestor`='%s' where `id_sector`='%s';",parents[j], codes[j])
     rs <- dbSendQuery(con, sql)
   }
 }
@@ -82,6 +82,6 @@ for (i in 1:length(sectors)){
 }
 
 for(i in 1:nrow(relation_sectors)){
-    sql <- sprintf( "insert into `h_sector` (`id_sector1`, `id_sector2`, `distance`) values ('%s', '%s', '%s');", relation_sectors$id_sector1[i], relation_sectors$id_sector2[i], relation_sectors$distance[i])
+    sql <- sprintf( "insert into `sector_relation` (`id_ancestor`, `id_sector`, `distance`) values ('%s', '%s', '%s');", relation_sectors$id_sector1[i], relation_sectors$id_sector2[i], relation_sectors$distance[i])
     rs <- dbSendQuery(con, sql)
 }

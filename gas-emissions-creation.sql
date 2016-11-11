@@ -57,16 +57,9 @@ CREATE TABLE `gas-emissions`.`h_sector` (
 
 
 ALTER TABLE `gas-emissions`.`h_sector` 
-ADD COLUMN `id_parent` VARCHAR(20) NULL AFTER `name`;
+ADD COLUMN `id_ancestor` VARCHAR(20) NULL AFTER `name`;
 
-ALTER TABLE `gas-emissions`.`h_sector` 
-ADD INDEX `id_parent_idx` (`id_parent` ASC);
-ALTER TABLE `gas-emissions`.`h_sector` 
-ADD CONSTRAINT `id_parent`
-  FOREIGN KEY (`id_parent`)
-  REFERENCES `gas-emissions`.`h_sector` (`id_sector`)
-  ON DELETE CASCADE
-  ON UPDATE NO ACTION;
+
 
 /*Before, Execute R Which inserts al h_sectors*/
 
@@ -107,3 +100,9 @@ CREATE TABLE `gas-emissions`.`sector_relation` (
   `id_sector` VARCHAR(20) NULL,
   `id_ancestor` VARCHAR(20) NULL,
   `distance` INT NULL);
+
+CREATE UNIQUE INDEX sector_closure_pk ON sector_relation (
+   id_sector,
+   id_ancestor);
+CREATE INDEX sector_closure_emp ON sector_relation (
+   id_sector);
