@@ -102,3 +102,8 @@ CREATE TABLE `gas-emissions`.`fact_emission` (
     REFERENCES `gas-emissions`.`h_year` (`id_year`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+CREATE TABLE `gas-emissions`.`sector_relation` (
+  `id_sector` VARCHAR(20) NULL,
+  `id_ancestor` VARCHAR(20) NULL,
+  `distance` INT NULL);
