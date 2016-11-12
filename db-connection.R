@@ -85,3 +85,9 @@ for(i in 1:nrow(relation_sectors)){
     sql <- sprintf( "insert into `sector_relation` (`id_ancestor`, `id_sector`, `distance`) values ('%s', '%s', '%s');", relation_sectors$id_sector1[i], relation_sectors$id_sector2[i], relation_sectors$distance[i])
     rs <- dbSendQuery(con, sql)
 }
+
+# Insert facts
+for(k in 1:nrow(data)){
+  sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", data$emissions[k], data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
+  rs <- dbSendQuery(con, sql)
+}
