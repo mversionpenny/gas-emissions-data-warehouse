@@ -8,3 +8,6 @@ https://docs.google.com/drawings/d/1V_FbutdW2vdMZQEGEJpqVN4kU0SzYC3bkdzFeEOeZys/
 
 Rapport:
 https://www.overleaf.com/6954144kncswfdnjhfz#/23795848/
+
+Architecture Technique :
+https://docs.google.com/drawings/d/1HLDSqUifJeRfWEgomuAoGrcSP8UZ5D_mMWj1AWFhfec/edit?usp=sharing

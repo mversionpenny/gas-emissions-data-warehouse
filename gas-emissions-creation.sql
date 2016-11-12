@@ -106,3 +106,6 @@ CREATE UNIQUE INDEX sector_closure_pk ON sector_relation (
    id_ancestor);
 CREATE INDEX sector_closure_emp ON sector_relation (
    id_sector);
+
+UPDATE `gas-emissions`.`h_sector` SET `name`='Household sector' WHERE `id_sector`='1.A.4';
+UPDATE `gas-emissions`.`h_sector` SET `name`='Other Sectors' WHERE `id_sector`='1.A.5';
