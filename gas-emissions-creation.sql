@@ -109,3 +109,8 @@ CREATE INDEX sector_closure_emp ON sector_relation (
 
 UPDATE `gas-emissions`.`h_sector` SET `name`='Household sector' WHERE `id_sector`='1.A.4';
 UPDATE `gas-emissions`.`h_sector` SET `name`='Other Sectors' WHERE `id_sector`='1.A.5';
+
+
+DELETE FROM `gas-emissions`.`h_country` WHERE `id_country`='EUA';
+DELETE FROM `gas-emissions`.`h_country` WHERE `id_country`='EUC';
+UPDATE `gas-emissions`.`h_country` SET `name`='United Kingdom' WHERE `id_country`='UK';
