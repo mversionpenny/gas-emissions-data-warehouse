@@ -1,0 +1,128 @@
+Avoir la quantité d'émissions de la France ente 1990 et 2014, pour chaque gaz : 
+select {[Measures].[Quantity]} ON COLUMNS,
+  {[Gas].[All Gas].Children} ON ROWS
+from [Cube]
+where ([Country].[FR])
+
+Avoir la quantité de CO2 émis par la France pour chaque année de 1990 à 2014
+select {[Measures].[Quantity]} ON COLUMNS,
+  {[Year].[All Years].Children} ON ROWS
+from [Cube]
+where ([Country].[FR], [Gas].[CO2])
+
+Avoir la quantité de CO2 émis ar la France de 1990 à 2014 dans le sous-secteur "Fuel Combustion-Sectoral approach" du secteur "Energy"
+select
+  {[Measures].[Quantity]} on columns,
+  {([Sector].[Energy].[Fuel Combustion-Sectoral approach])} ON rows
+from Cube
+where ([Gas].[CO2], [Country].[FR])
+
+Avoir la quantité de GES par habitant émis par tous les pays d'Europe
+with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
+select {[Measures].[Quantity per hab]} ON COLUMNS,
+  [Country].[All Countries].Children ON ROWS
+from [Cube]
+
+Avoir la quantité de GES par habitant émis par tous les pays d'Europe dans le secteur "Energy"
+with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
+select {[Measures].[Quantity per hab]} ON COLUMNS,
+  [Country].[All Countries].Children ON ROWS
+from [Cube]
+where [Sector].[Energy]
+
+Avoir la quantité d'émissions de l'Europe ente 1990 et 2014, pour chaque secteur : 
+select {[Measures].[Quantity]} ON COLUMNS,
+  {[Sector].[All Sectors].Children} ON ROWS
+from [Cube]
+
+Avoir la quantité d'émissions de l'Islande ente 1990 et 2014, pour chaque secteur : 
+select {[Measures].[Quantity]} ON COLUMNS,
+  {[Gas].[All Sectors].Children} ON ROWS
+from [Cube]
+where [Country].[IS]
+
+Avoir la quantité d'émissions de l'Europe ente 1990 et 2014 : 
+select {[Measures].[Quantity]} ON COLUMNS,
+  {[Year].[All Years].Children} ON ROWS
+from [Cube]
+
+
+
+
+Avoir la différence par rapport a chaque année :
+WITH  MEMBER [Measures].[DIFF] AS 
+  IIF 
+  ( 
+    [Year].CurrentMember.PrevMember
+    IS NULL,
+    NULL,
+    [Measures].[Quantity] 
+    - 
+    ( 
+      [Measures].[Quantity],
+      [Year].CurrentMember.PrevMember 
+    )
+  )
+
+SELECT 
+  NON EMPTY 
+  { 
+    [Measures].[DIFF],
+    [Measures].[Quantity]
+  }
+  ON ROWS,
+  NON EMPTY 
+    Hierarchize 
+    ( 
+      {[Year].MEMBERS} 
+    )
+  ON COLUMNS 
+  FROM [Cube]
+
+  Avoir la difference en pourcentage :
+  WITH  MEMBER [Measures].[DIFF] AS 
+  IIF 
+  ( 
+    [Year].CurrentMember.PrevMember
+    IS NULL,
+    NULL,
+    ([Measures].[Quantity] 
+    - 
+    ( 
+      [Measures].[Quantity],
+      [Year].CurrentMember.PrevMember 
+    ))/ ( 
+      [Measures].[Quantity],
+      [Year].CurrentMember.PrevMember 
+    )
+  ) , format_string = "0.00"
+
+SELECT 
+   NON EMPTY 
+    Hierarchize 
+    ( 
+      {[Year].MEMBERS} 
+    )
+  ON ROWS,
+
+ NON EMPTY 
+  { 
+    [Measures].[DIFF]
+  }
+  ON COLUMNS 
+  FROM [Cube]
+
+
+  Avoir la quantité de GES emis par habitant selon les années :
+with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
+
+select
+   Hierarchize 
+    ( 
+      {[Country].[All Countries].Children} 
+    ) ON COLUMNS,
+{([Measures].[Quantity per hab], [Year].[All Years])}  
+ ON ROWS
+from [Cube]
+
+
