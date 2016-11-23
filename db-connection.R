@@ -86,8 +86,48 @@ for(i in 1:nrow(relation_sectors)){
     rs <- dbSendQuery(con, sql)
 }
 
+library(parallel)
+cl <- makeCluster(4)
+objectData <- data
+clusterExport(cl, list("dbSendQuery","sprintf","relation_sectors","objectData","con"))
+res <- parLapply(cl,1:nrow(objectData), fun = function(k) {
+  idxes <- which(relation_sectors$id_sector1 == data$Sector_code[k])
+  is_ancestor = FALSE
+  for(i in 1:length(idxes)){
+    if(relation_sectors$distance[i]!=0){
+      is_ancestor = TRUE
+    }
+  }
+  if(is_ancestor){
+    sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", 0, data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
+    rs <- dbSendQuery(con, sql)
+  }
+  else{
+    sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", data$emissions[k], data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
+    rs <- dbSendQuery(con, sql)
+  }
+})
+
+stopCluster(cl)
+
+
+
+
 # Insert facts
 for(k in 1:nrow(data)){
-  sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", data$emissions[k], data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
-  rs <- dbSendQuery(con, sql)
+  idxes <- which(relation_sectors$id_sector1 == data$Sector_code[k])
+  is_ancestor = FALSE
+  for(i in 1:length(idxes)){
+    if(relation_sectors$distance[i]!=0){
+      is_ancestor = TRUE
+    }
+  }
+  if(is_ancestor){
+    sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", 0, data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
+    rs <- dbSendQuery(con, sql)
+  }
+  else{
+    sql <- sprintf( "insert into `fact_emission` (`quantity`, `id_sector`, `id_country`, `id_gas`, `id_year` ) values ('%f', '%s', '%s', '%s','%d');", data$emissions[k], data$Sector_code[k], data$Country_code[k], substr(data$Pollutant_name[k],1,3), data$Year[k])
+    rs <- dbSendQuery(con, sql)
+  }
 }
