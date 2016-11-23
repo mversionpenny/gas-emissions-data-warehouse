@@ -114,3 +114,45 @@ UPDATE `gas-emissions`.`h_sector` SET `name`='Other Sectors' WHERE `id_sector`='
 DELETE FROM `gas-emissions`.`h_country` WHERE `id_country`='EUA';
 DELETE FROM `gas-emissions`.`h_country` WHERE `id_country`='EUC';
 UPDATE `gas-emissions`.`h_country` SET `name`='United Kingdom' WHERE `id_country`='UK';
+
+
+ALTER TABLE `gas-emissions`.`h_country` 
+ADD COLUMN `nb_inhabitants` INT NULL AFTER `name`;
+
+
+/*insert nb_inhabitants in counries*/
+
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='8700471' WHERE `id_country`='AT';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='11289853' WHERE `id_country`='BE';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='7153784' WHERE `id_country`='BG';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='8325194' WHERE `id_country`='CH';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='848319' WHERE `id_country`='CY';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='10553843' WHERE `id_country`='CZ';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='82162000' WHERE `id_country`='DE';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='5707251' WHERE `id_country`='DK';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='1315944' WHERE `id_country`='EE';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='46438422' WHERE `id_country`='ES';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='5487308' WHERE `id_country`='FI';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='66661621' WHERE `id_country`='FR';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='10793526' WHERE `id_country`='GR';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`=' 4190669' WHERE `id_country`='HR';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='9830485' WHERE `id_country`='HU';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='4658530' WHERE `id_country`='IE';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='332529' WHERE `id_country`='IS';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='60665551' WHERE `id_country`='IT';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='37622' WHERE `id_country`='LI';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='2888558' WHERE `id_country`='LT';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='576249' WHERE `id_country`='LU';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='1968957' WHERE `id_country`='LV';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='434403' WHERE `id_country`='MT';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='16979120' WHERE `id_country`='NL';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='5213985' WHERE `id_country`='NO';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='37967209' WHERE `id_country`='PL';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='10341330' WHERE `id_country`='PT';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='19759968' WHERE `id_country`='RO';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='9851017' WHERE `id_country`='SE';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='2064188' WHERE `id_country`='SI';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='5426252' WHERE `id_country`='SK';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='78741053' WHERE `id_country`='TR';
+UPDATE `gas-emissions`.`h_country` SET `nb_inhabitants`='65341183' WHERE `id_country`='UK';
+
