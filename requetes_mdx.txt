@@ -10,12 +10,20 @@ select {[Measures].[Quantity]} ON COLUMNS,
 from [Cube]
 where ([Country].[FR], [Gas].[CO2])
 
-Avoir la quantité de CO2 émis ar la France de 1990 à 2014 dans le sous-secteur "Fuel Combustion-Sectoral approach" du secteur "Energy"
+Avoir la quantité de CO2 émis par la France de 1990 à 2014 dans le sous-secteur "Fuel Combustion-Sectoral approach" du secteur "Energy"
 select
   {[Measures].[Quantity]} on columns,
   {([Sector].[Energy].[Fuel Combustion-Sectoral approach])} ON rows
 from Cube
 where ([Gas].[CO2], [Country].[FR])
+
+Avoir la quantité de CO2 émis par la France de 1990 à 2014 dans le sous secteur "Transport" du sous-secteur "Fuel Combustion-Sectoral approach" du secteur "Energy"
+select {[Measures].[Quantity]} ON COLUMNS,
+  [Sector].[Energy].[Fuel Combustion-Sectoral approach].[Transport].Children ON ROWS
+from [Cube]
+where ([Gas].[CO2], [Country].[FR])
+
+
 
 Avoir la quantité de GES par habitant émis par tous les pays d'Europe
 with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
@@ -112,6 +120,44 @@ SELECT
   ON COLUMNS 
   FROM [Cube]
 
+  Avoir la différence en pourcentage par raport à 1990 :
+
+  WITH  MEMBER [Measures].[DIFF] AS 
+  IIF 
+  ( 
+    [Year].CurrentMember.PrevMember
+    IS NULL,
+    NULL,
+    ([Measures].[Quantity] 
+    - 
+    ( 
+      [Measures].[Quantity],
+      [Year].[1990]
+    )) * 100/ ( 
+      [Measures].[Quantity],
+      [Year].[1990]
+    )
+  ) , format_string = "0.00"
+
+SELECT 
+   NON EMPTY 
+    Hierarchize 
+    ( 
+      {[Year].MEMBERS} 
+    )
+  ON ROWS,
+
+ NON EMPTY 
+  { 
+    [Measures].[DIFF]
+  }
+  ON COLUMNS 
+  FROM [Cube]
+
+
+
+
+
 
   Avoir la quantité de GES emis par habitant selon les années :
 with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
@@ -121,8 +167,20 @@ select
     ( 
       {[Country].[All Countries].Children} 
     ) ON COLUMNS,
-{([Measures].[Quantity per hab], [Year].[All Years])}  
+{([Measures].[Quantity per hab], [Year].[All Years].Children)}  
  ON ROWS
 from [Cube]
+
+with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.000"
+
+select
+   Hierarchize 
+    ( 
+      {[Country].[All Countries].Children} 
+    ) ON COLUMNS,
+{([Measures].[Quantity per hab], [Year].[All Years].Children)}  
+ ON ROWS
+from [Cube]
+
 
 
