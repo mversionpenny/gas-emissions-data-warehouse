@@ -4,6 +4,12 @@ select {[Measures].[Quantity]} ON COLUMNS,
 from [Cube]
 where ([Country].[FR])
 
+Avoir la quantité d'émissions de la France ente 1990 et 2014, pour chaque secteur: 
+select {[Measures].[Quantity]} on columns,
+  {([Sector].[All Sectors].Children)} ON rows
+from Cube
+where ([Gas].[CO2], [Country].[FR])
+
 Avoir la quantité de CO2 émis par la France pour chaque année de 1990 à 2014
 select {[Measures].[Quantity]} ON COLUMNS,
   {[Year].[All Years].Children} ON ROWS
@@ -159,7 +165,7 @@ SELECT
 
 
 
-  Avoir la quantité de GES emis par habitant selon les années :
+Avoir la quantité de GES emis par habitant selon les années :
 with member [Measures].[Quantity per hab] as '([Measures].[Quantity] / [Country].[country].CurrentMember.Properties("nb_inhabitants"))', format_string = "0.00"
 
 select
